@@ -41,5 +41,15 @@ export class IncrementBarComponent implements OnInit {
     this.valueOutput.emit(this.progress);
   }
 
+  onChange(newValue: number): void {
+
+    if (newValue >= 100) {
+      this.progress = 100;
+    } else if (newValue <= 0) {
+      this.progress = 0;
+    } else {
+      this.valueOutput.emit(this.progress);
+    }
+  }
 
 }

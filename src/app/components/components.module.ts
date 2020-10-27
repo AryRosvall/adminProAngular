@@ -3,17 +3,21 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 import { IncrementBarComponent } from './increment-bar/increment-bar.component';
+import { DoughnutComponent } from './doughnut/doughnut.component';
+import { ChartsModule } from 'ng2-charts';
 
 
 
 @NgModule({
-  declarations: [IncrementBarComponent],
+  declarations: [IncrementBarComponent, DoughnutComponent],
   imports: [
     CommonModule,
-    FormsModule
+    FormsModule,
+    ChartsModule
   ],
   exports: [
-    IncrementBarComponent
+    IncrementBarComponent,
+    DoughnutComponent
   ]
 })
 export class ComponentsModule { }
