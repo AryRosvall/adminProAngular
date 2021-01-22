@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import Swal from 'sweetalert2'
-import { FormBuilder, FormGroup, ValidatorFn, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { UsersService } from 'src/app/services/users.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-register',
@@ -21,20 +22,24 @@ export class RegisterComponent {
     password2: ['', [Validators.required, Validators.minLength(6)]],
     terms: [false, [Validators.required]],
   }, {
-    validators: this.samePasswords('password', 'password2')
+    validators: [
+      this.samePasswords('password', 'password2'),
+      this.validateTerms('terms')
+    ]
   })
 
-  constructor(private fb: FormBuilder, private userService: UsersService) { }
+  constructor(private fb: FormBuilder, private userService: UsersService, private router: Router) { }
 
   createUser() {
     this.formSubmitted = true;
 
+    console.log(this.registerForm)
     if (this.registerForm.invalid) {
       return
     }
     this.userService.createUser(this.registerForm.value)
       .subscribe(resp => {
-        console.log("user created", resp)
+        this.router.navigateByUrl('/')
       }, (err) => {
         console.log(err)
         Swal.fire('Error', err.error.msg, 'error')
@@ -62,6 +67,7 @@ export class RegisterComponent {
     return (pass || pass2) && this.formSubmitted ? true : false
   }
 
+
   samePasswords(pass1: string, pass2: string) {
     return (formGroup: FormGroup) => {
       const pass1Control = formGroup.get(pass1);
@@ -70,6 +76,16 @@ export class RegisterComponent {
         pass2Control.setErrors(null)
       } else {
         pass2Control.setErrors({ notEqual: true })
+      }
+    }
+  }
+  validateTerms(terms: string) {
+    return (formGroup: FormGroup) => {
+      const termsControl = formGroup.get(terms);
+      if (termsControl.value) {
+        termsControl.setErrors(null)
+      } else {
+        termsControl.setErrors({ declineTerms: true })
       }
     }
   }
