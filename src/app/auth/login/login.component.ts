@@ -13,7 +13,6 @@ declare const gapi: any;
 })
 export class LoginComponent implements OnInit {
 
-
   public formSubmitted = false;
   public auth2: any;
 
@@ -56,18 +55,20 @@ export class LoginComponent implements OnInit {
       })
   }
 
-
-
-
   renderButton() {
-    gapi.signin2.render('googleSignin', {
-      'scope': 'profile email',
-      'width': 240,
-      'height': 50,
-      'longtitle': true,
-      'theme': 'dark',
-    });
-    this.startApp()
+    try {
+
+      gapi.signin2.render('googleSignin', {
+        'scope': 'profile email',
+        'width': 240,
+        'height': 50,
+        'longtitle': true,
+        'theme': 'dark',
+      });
+      this.startApp()
+    } catch (error) {
+      console.log(error)
+    }
   }
 
   async startApp() {
@@ -81,8 +82,6 @@ export class LoginComponent implements OnInit {
       (googleUser) => {
         const idToken = googleUser.getAuthResponse().id_token;
         this.userService.loginGoogle(idToken).subscribe(resp => this.ngZone.run(() => this.router.navigateByUrl('/')))
-
-
       }, (error) => {
         alert(JSON.stringify(error, undefined, 2));
       });

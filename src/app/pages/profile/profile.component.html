@@ -1,0 +1,45 @@
+<div class="row">
+  <div class="col-md-6">
+    <div class="card">
+      <div class="card-body">
+        <h4 class="card-title">My Profile</h4>
+        <h6 class="card-subtitle">Update your information</h6>
+        <form class="form p-t-20" id="profileForm" [formGroup]="profileForm" (submit)="updateProfile()">
+          <div class="form-group">
+            <label for="name">User Name</label>
+            <div class="input-group">
+              <div class="input-group-addon"><i class="ti-user"></i></div>
+              <input type="text" class="form-control" formControlName="name" id="name" placeholder="User name">
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="email">Email address</label>
+            <div class="input-group">
+              <div class="input-group-addon"><i class="ti-email"></i></div>
+              <input type="email" class="form-control" formControlName="email" id="email" placeholder="Email">
+            </div>
+          </div>
+          <button type="submit" [disabled]="profileForm.invalid"
+            class="btn btn-success waves-effect waves-light m-r-10">
+            <i class="fa fa-save"></i>
+            Save
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="card">
+      <div class="card-body">
+        <h4 class="card-title">Avatar</h4>
+        <h6 class="card-subtitle">User image</h6>
+        <img class="p-t-20" src="" alt="">
+        <input type="file" name="" id="">
+        <button type="button" class="btn btn-success btn-block mt-4 waves-effect waves-light m-r-10">
+          <i class="fa fa-save"></i>
+          Update image
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
