@@ -5,23 +5,27 @@ import { RouterModule } from '@angular/router';
 import { BreadcrumbsComponent } from './breadcrumbs/breadcrumbs.component';
 import { SidebarComponent } from './sidebar/sidebar.component';
 import { HeaderComponent } from './header/header.component';
-
-
+import { EmailPipe } from '../pipes/email.pipe';
+import { TruncateNamesPipe } from '../pipes/truncate-names.pipe';
 
 @NgModule({
   declarations: [
     BreadcrumbsComponent,
     SidebarComponent,
     HeaderComponent,
+    EmailPipe,
+    TruncateNamesPipe
   ],
   imports: [
     CommonModule,
-    RouterModule
+    RouterModule,
   ],
   exports: [
     BreadcrumbsComponent,
     SidebarComponent,
     HeaderComponent,
+    EmailPipe,
+    TruncateNamesPipe
   ],
 })
 export class SharedModule { }

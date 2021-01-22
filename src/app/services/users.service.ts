@@ -6,6 +6,7 @@ import { RegisterForm } from '../interfaces/register-form.interface';
 import { LoginForm } from '../interfaces/login-form.interface';
 import { Observable, of } from 'rxjs';
 import { Router } from '@angular/router';
+import { User } from '../models/user.model';
 
 const base_url = environment.base_url;
 declare const gapi;
@@ -16,6 +17,7 @@ declare const gapi;
 export class UsersService {
 
   public auth2;
+  public user: User;
 
   constructor(private http: HttpClient, private router: Router, private ngZone: NgZone) {
     this.googleInit()
@@ -61,7 +63,6 @@ export class UsersService {
   }
 
   validateToken(): Observable<boolean> {
-
     const token = localStorage.getItem('token') || ''
     return this.http.get(`${base_url}/login/renew`, {
       headers: {
@@ -69,10 +70,12 @@ export class UsersService {
       }
     })
       .pipe(
-        tap((resp: any) => {
+        map((resp: any) => {
+          const { name, email, google, uid, role, img = '' } = resp.user;
+          this.user = new User(name, email, google, role, uid, img, '')
           localStorage.setItem('token', resp.token)
+          return true
         }),
-        map(resp => true),
         catchError(err => of(false))
       )
   }
