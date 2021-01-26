@@ -7,6 +7,7 @@ import { LoginForm } from '../interfaces/login-form.interface';
 import { Observable, of } from 'rxjs';
 import { Router } from '@angular/router';
 import { User } from '../models/user.model';
+import { getUsers } from '../interfaces/get-users';
 
 const base_url = environment.base_url;
 declare const gapi;
@@ -18,7 +19,7 @@ export class UsersService {
 
   public auth2;
   public user: User;
-  public headers: HttpHeaders;
+  //public headers: HttpHeaders;
   public token: string;
 
   constructor(private http: HttpClient, private router: Router, private ngZone: NgZone) {
@@ -32,6 +33,15 @@ export class UsersService {
 
   get getUid() {
     return this.user.uid || ''
+  }
+
+  get headers(): {} {
+    return {
+      headers: {
+        'Content-Type': 'application/json',
+        'x-token': this.getToken
+      }
+    }
   }
 
   set setToken(token) {
@@ -59,6 +69,22 @@ export class UsersService {
     }
 
     return this.http.put(`${base_url}/users/${this.getUid}`, data, { headers })
+  }
+
+  getUsers(from: number = 0) {
+
+    return this.http.get<getUsers>(`${base_url}/users?from=${from}`, this.headers)
+      .pipe(
+        map(resp => {
+          console.log("🚀 ~ file: users.service.ts ~ line 79 ~ UsersService ~ getUsers ~ resp", resp)
+          const users = resp.users.map(user => new User(user.name, user.email, user.google, user.role, user.uid, user.img, ''))
+          console.log("🚀 ~ file: users.service.ts ~ line 80 ~ UsersService ~ getUsers ~ users", users)
+          return {
+            total: resp.total,
+            users
+          }
+        })
+      )
   }
 
   googleInit() {
