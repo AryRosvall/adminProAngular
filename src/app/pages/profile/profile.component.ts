@@ -34,13 +34,14 @@ export class ProfileComponent implements OnInit {
 
   updateProfile() {
     this.userService.updateUser(this.profileForm.value)
-      .subscribe((resp): any => {
-        this.user.name = resp.user.name
-        this.user.email = resp.user.email
+      .subscribe((resp) => {
+        const { name, email } = this.profileForm.value
+        this.user.name = name
+        this.user.email = email
         Swal.fire('Success', "Your information has been updated", 'success')
-      }), (err) => {
+      }, (err) => {
         Swal.fire('Error', err.error.msg, 'error')
-      }
+      })
   }
 
   changeImage(file) {
