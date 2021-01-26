@@ -13,7 +13,6 @@ export class HeaderComponent {
   public user: User
   constructor(private userService: UsersService) {
     this.user = this.userService.user
-    console.log(this.user.imageUrl)
   }
 
   logout() {

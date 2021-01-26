@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import Swal from 'sweetalert2'
 import { User } from 'src/app/models/user.model';
 import { UsersService } from 'src/app/services/users.service';
+import { FilesService } from 'src/app/services/files.service';
 
 @Component({
   selector: 'app-profile',
@@ -14,8 +15,10 @@ export class ProfileComponent implements OnInit {
 
   public profileForm: FormGroup
   public user: User
+  public imageToUpload: File
+  public imgTemp: any
 
-  constructor(private fb: FormBuilder, private userService: UsersService) {
+  constructor(private fb: FormBuilder, private userService: UsersService, private filesService: FilesService) {
 
     this.user = this.userService.user
   }
@@ -32,13 +35,33 @@ export class ProfileComponent implements OnInit {
   updateProfile() {
     this.userService.updateUser(this.profileForm.value)
       .subscribe((resp): any => {
-        const { user } = resp
-        this.user.name = user.name
-        this.user.email = user.email
+        this.user.name = resp.user.name
+        this.user.email = resp.user.email
         Swal.fire('Success', "Your information has been updated", 'success')
       }), (err) => {
         Swal.fire('Error', err.error.msg, 'error')
       }
+  }
+
+  changeImage(file) {
+    if (!file) { return this.imgTemp = null }
+    this.imageToUpload = file
+    const reader = new FileReader()
+    reader.readAsDataURL(file)
+    reader.onloadend = () => {
+      this.imgTemp = reader.result
+    }
+  }
+
+  uploadFile() {
+    this.filesService.updatePhoto(this.imageToUpload, 'users', this.user.uid)
+      .then(resp => {
+        if (resp) {
+          this.user.img = resp
+          this.imageToUpload = null
+          Swal.fire('Success', "Your photo has been updated", 'success')
+        }
+      }).catch(err => Swal.fire('Error', err, 'error'))
   }
 
 }

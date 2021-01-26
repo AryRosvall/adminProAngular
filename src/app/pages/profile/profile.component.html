@@ -33,9 +33,13 @@
       <div class="card-body">
         <h4 class="card-title">Avatar</h4>
         <h6 class="card-subtitle">User image</h6>
-        <img class="p-t-20" src="" alt="">
-        <input type="file" name="" id="">
-        <button type="button" class="btn btn-success btn-block mt-4 waves-effect waves-light m-r-10">
+        <div class="p-t-20 text-center ">
+          <img *ngIf="!imgTemp" class="img-avatar" [src]="user.imageUrl" alt="">
+          <img *ngIf="imgTemp" class="img-avatar" [src]="imgTemp" alt="">
+        </div>
+        <input type="file" name="image" id="image" (change)="changeImage($event.target.files[0])">
+        <button type="button" [disabled]="!imageToUpload" (click)="uploadFile()"
+          class="btn btn-success btn-block mt-4 waves-effect waves-light m-r-10">
           <i class="fa fa-save"></i>
           Update image
         </button>
