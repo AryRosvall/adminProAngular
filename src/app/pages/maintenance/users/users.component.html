@@ -2,7 +2,8 @@
   <div class="col-6">
     <div class="card">
       <div class="card-body">
-        <input type="text" class="form-control" placeholder="Search user...">
+        <input type="text" class="form-control" placeholder="Search user..." #searchValue
+          (keyup)="searchUsers(searchValue.value)">
       </div>
     </div>
   </div>
@@ -26,20 +27,27 @@
           <table class="table table-bordered">
             <thead>
               <tr>
-                <th class="w100">Avatar</th>
-                <th>Email</th>
-                <th>Name</th>
-                <th class="w100">Role</th>
-                <th class="w100">Auth</th>
-                <th class="text-nowrap w100">Action</th>
+                <th class="w100 text-center">Avatar</th>
+                <th class="text-center">Email</th>
+                <th class="text-center">Name</th>
+                <th class="w150 text-center">Role</th>
+                <th class="w100 text-center">Auth</th>
+                <th class="text-nowrap w100 text-center">Action</th>
               </tr>
             </thead>
             <tbody>
               <tr *ngFor="let user of users">
-                <td class="text-center"><img [src]="user.imageUrl" class="avatar" alt="User's avatar"></td>
+                <td class="text-center">
+                  <img [src]="user.imageUrl" class="avatar" alt="User's avatar">
+                </td>
                 <td>{{user.email}}</td>
                 <td>{{user.name}}</td>
-                <td>{{user.role}}</td>
+                <td>
+                  <select class="form-control" [(ngModel)]="user.role" (change)="changeRole(user)">
+                    <option value="ADMIN_ROLE">Admin</option>
+                    <option value="USER_ROLE">User</option>
+                  </select>
+                </td>
                 <td class="text-center" *ngIf="user.google; else elseBlock">
                   <span class="label label-danger">Google</span>
                 </td>
@@ -48,21 +56,20 @@
                     <span class="label label-info">Email</span>
                   </td>
                 </ng-template>
-
-
-
                 <td class="text-nowrap text-center">
-                  <a href="#" data-toggle="tooltip" data-original-title="Edit"> <i
-                      class="fa fa-pencil text-inverse m-r-10"></i> </a>
-                  <a href="#" data-toggle="tooltip" data-original-title="Delete"> <i
-                      class="fa fa-close text-danger"></i>
+                  <a *ngIf="user.uid !== currentUserUid" class="cursor" (click)="deleteUser(user)" data-toggle="tooltip"
+                    data-original-title="Delete">
+                    <i class="fa fa-close text-danger"></i>
                   </a>
+
                 </td>
               </tr>
             </tbody>
           </table>
-          <button class="btn btn-secondary" (click)="changePage(-5)">Previous</button>&nbsp;
-          <button class="btn btn-secondary" (click)="changePage(5)">Next</button>
+          <div *ngIf="searchValue.value.length === 0">
+            <button class="btn btn-secondary" (click)="changePage(-5)">Previous</button>&nbsp;
+            <button class="btn btn-secondary" (click)="changePage(5)">Next</button>
+          </div>
         </div>
       </div>
     </div>

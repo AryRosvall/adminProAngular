@@ -33,8 +33,13 @@ export class ProfileComponent implements OnInit {
   }
 
   updateProfile() {
-    this.userService.updateUser(this.profileForm.value)
+    this.userService.updateProfile(this.profileForm.value)
       .subscribe((resp) => {
+
+        if (!resp.ok) {
+          Swal.fire('Error', resp.msg, 'error')
+          return
+        }
         const { name, email } = this.profileForm.value
         this.user.name = name
         this.user.email = email
